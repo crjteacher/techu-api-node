@@ -11,16 +11,16 @@ phases:
       - npm install unit.js
       - npm install express
       - echo Logging in to Docker Hub...
-      - docker login --username crjteacher --password cr1st0pher
+      - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   build:
     commands:
       - echo Build started on `date`
       - echo Compiling the Node.js code
       - mocha test/
       - echo Building the Docker image...
-      - docker build -t crjteacher/techu-finalproject-apinode:alpha .
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push crjteacher/techu-finalproject-apinode:alpha
+      - docker push $IMAGE_REPO_NAME:$IMAGE_TAG
