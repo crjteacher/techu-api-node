@@ -5,19 +5,22 @@ phases:
     commands:
       - echo Installing Mocha...
       - npm install -g mocha
-      - npm install -g express
   pre_build:
     commands:
       - echo Installing source NPM dependencies...
       - npm install unit.js
+      - npm install express
+      - Logging in to Docker Hub...
+      - docker login --username crjteacher --password cr1st0pher
   build:
     commands:
       - echo Build started on `date`
       - echo Compiling the Node.js code
       - mocha test/
+      - echo Building the Docker image...
+      - docker build -t crjteacher/techu-finalproject-apinode:alpha .
   post_build:
     commands:
       - echo Build completed on `date`
-artifacts:
-  files:
-    - index.js
+      - echo Pushing the Docker image...
+      - docker push crjteacher/techu-finalproject-apinode:alpha
