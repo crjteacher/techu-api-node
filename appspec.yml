@@ -12,10 +12,10 @@ hooks:
       timeout: 300
       runas: root
   ApplicationStop:
-    - location: scripts/stop_container.sh
+    - location: scripts/stop_containers.sh
       timeout: 300
       runas: root
   ApplicationStart:
-      - location: scripts/start_container.sh
-        timeout: 300
-        runas: root
+    - location: scripts/start_container.sh
+      timeout: 300
+      runas: root
