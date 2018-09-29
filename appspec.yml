@@ -10,7 +10,6 @@ hooks:
       runas: root
     - location: scripts/remove_app.sh
       timeout: 300
-      runas: root
   ApplicationStop:
     - location: scripts/stop_containers.sh
       timeout: 300
