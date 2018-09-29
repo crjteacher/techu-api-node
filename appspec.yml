@@ -8,7 +8,7 @@ hooks:
     - location: scripts/pull_image.sh
       timeout: 300
       runas: root
-    - location: scripts/start_container
+    - location: scripts/start_container.sh
       timeout: 300
       runas: root
 #  ApplicationStop:
