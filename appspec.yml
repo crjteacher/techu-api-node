@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+#files:
+#  - source: /
+#    destination: /home/ubuntu/apinode
+hooks:
+  BeforeInstall:
+    - location: scripts/pull_image.sh
+      timeout: 300
+      runas: root
+    - location: scripts/start_container
+      timeout: 300
+      runas: root
+#  ApplicationStop:
+#    - location: scripts/stop_server
+#      timeout: 300
+#      runas: root
