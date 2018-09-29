@@ -1,2 +1,2 @@
 #!/bin/bash
-docker pull crjteacher/techu-finalproject-apinode
+docker pull crjteacher/techu-finalproject-apinode:latest

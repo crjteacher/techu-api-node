@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -p -d 3000:3000 crjteacher/techu-finalproject-apinode
+docker run -d -p 3000:3000 crjteacher/techu-finalproject-apinode:latest
