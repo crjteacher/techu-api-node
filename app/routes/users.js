@@ -8,9 +8,15 @@ router.get('', function (req, res) {
 });
 
 router.post('', function(req, res) {
-    console.log(req.body);
-    User.createUser(req.body.name, req.body.lastName, req.body.email, req.body.password);
-    res.send(req.body);
+    User.createUser(req.body.name, req.body.lastName, req.body.email, req.body.password, function(status, user){
+        res.status(status);
+        if (status === 201) {
+            res.json(user);
+        } else {
+            console.log("Estatus en el router: " + status);
+            res.json({msg: 'No es posible crear el cliente debido a que ya existe un correo igual registrado'});
+        }
+    });
 });
 
 module.exports = router;

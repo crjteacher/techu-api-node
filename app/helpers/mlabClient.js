@@ -14,12 +14,12 @@ class MLabClient{
      * @param fn Callback a ejecutar una vez se resuelva el llamado a Mlab
      */
     static callGetFunction(collection, query, fn) {
-        var mlabUrl = properties.get('mlab.base.url') + '/' + collection + '?apiKey=' + properties.get('mlab.api.key');
+        let mlabUrl = properties.get('mlab.base.url') + '/' + collection + '?apiKey=' + properties.get('mlab.api.key');
         if (query != null) {
             mlabUrl += '&q=' + JSON.stringify(query);
         }
         console.log(mlabUrl);
-        var client = requestJson.createClient(mlabUrl);
+        let client = requestJson.createClient(mlabUrl);
         client.headers['Content-Type'] = 'application/json';
         client.get('', function(err, resM, body) {
             //Usamos el callback
@@ -28,9 +28,21 @@ class MLabClient{
         });
     }
 
-    static callPostFunction(collection, payload) {
-        var mlabUrl = properties.get('mlab.base.url') + '/' + collection + '?apiKey=' + properties.get('mlab.api.key');
-
+    /**
+     * Implementación de una llamado de tipo POST.
+     * @param collection  Colección mongo objeto de la consulta
+     * @param payload     Body de la petición post
+     * @param fn          Callback a ejecutar una vez resuelta la petición
+     */
+    static callPostFunction(collection, payload, fn) {
+        let mlabUrl = properties.get('mlab.base.url') + '/' + collection + '?apiKey=' + properties.get('mlab.api.key');
+        console.log(mlabUrl);
+        let client = requestJson.createClient(mlabUrl);
+        client.headers['Content-Type'] = 'application/json';
+        client.post('', payload, function(err, resM, body) {
+            console.log(body);
+            fn(err, resM, body);
+        });
     }
 }
 module.exports = MLabClient;
