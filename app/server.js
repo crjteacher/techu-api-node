@@ -3,6 +3,7 @@ var express = require('express'),
     port = process.env.PORT || 3000;
 
 var bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
@@ -14,4 +15,4 @@ app.use(function (req, res, next) {
 app.use(require('./routes'));
 app.listen(port);
 
-console.log('todo list RESTful API server started on: ' + port);
+console.log('ApiNode server started on port ' + port);
