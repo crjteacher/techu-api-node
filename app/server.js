@@ -12,6 +12,16 @@ app.use(function (req, res, next) {
     next();
 });
 
+/**
+ * Esta función es llamada antes de cada request.
+ */
+app.use(function(req, res, next) {
+    // Mostramos en la consola información referente a la request
+    console.log(req.method, req.url, req.body, req.params);
+    //Seguimos a la ruta correspondiente.
+    next();
+});
+
 app.use(require('./routes'));
 app.listen(port);
 

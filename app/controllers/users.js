@@ -1,8 +1,9 @@
-const {body, validationResult} = require('express-validator/check');
+const {body, param, validationResult} = require('express-validator/check');
 const stringUtils = require('../helpers/strings');
 const User = require('../models/user');
 const ApiError = require('../helpers/apiError');
 const HttpStatus = require('http-status-codes');
+const errorHandler = require('../helpers/errorHandler');
 
 /**
  * Validaciones para los métodos asociados a manejo de usuarios
@@ -11,10 +12,14 @@ const HttpStatus = require('http-status-codes');
  */
 exports.validate = (method) => {
     switch (method) {
+        case 'getUserById':
+            return [
+              param('id', 'Id inválido').exists().matches(/\w+/)
+            ];
         case 'createUser':
             return [
-                body('name', 'Nombre inválido').exists().isLength({min:2, max: 30}).matches(/\w*/),
-                body('lastName', 'Apellido inválido').exists().isLength({min: 2, max: 30}).matches(/\w*/),
+                body('name', 'Nombre inválido').exists().isLength({min:2, max: 30}).matches(/\w+/),
+                body('lastName', 'Apellido inválido').exists().isLength({min: 2, max: 30}).matches(/\w+/),
                 body('email', 'Email Inválido').exists().custom(email => {
                     return stringUtils.isValidEmail(email);
                 }),
@@ -24,14 +29,16 @@ exports.validate = (method) => {
             ];
         case 'updateUser':
             return [
-                body('name', 'Nombre inválido').exists().isLength({min:2, max: 30}).matches(/\w*/),
-                body('lastName', 'Apellido inválido').exists().isLength({min: 2, max: 30}).matches(/\w*/),
+                param('id', 'Id inválido').exists().matches(/\w+/),
+                body('name', 'Nombre inválido').exists().isLength({min:2, max: 30}).matches(/\w+/),
+                body('lastName', 'Apellido inválido').exists().isLength({min: 2, max: 30}).matches(/\w+/),
                 body('email', 'Email Inválido').exists().custom(email => {
                     return stringUtils.isValidEmail(email);
                 }),
             ];
         case 'updatePassword':
             return [
+                param('id', 'Id inválido').exists().matches(/\w+/),
                 body('newPassword', 'Invalid password').exists().custom(password => {
                     return stringUtils.isValidPassword(password);
                 }),
@@ -47,14 +54,14 @@ exports.validate = (method) => {
  * @returns {*}
  */
 exports.getUserById = (req, res) => {
-    if (stringUtils.isBlank(req.params.id)) {
-        return res.status(HttpStatus.BAD_REQUEST).json(new ApiError("general.wrongParameters"));
+    if (!errorHandler.validate(validationResult, req, res)) {
+        return;
     }
     User.findById(req.params.id, (user, error) => {
         if (error) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
         } else if (user) {
-            res.status(HttpStatus.CREATED).json(user);
+            res.status(HttpStatus.OK).json(user);
         } else {
             res.status(HttpStatus.NO_CONTENT).json();
         }
@@ -68,7 +75,7 @@ exports.getUserById = (req, res) => {
  * @returns {*}
  */
 exports.createUser = (req, res) => {
-    if (!validateInput(req, res)) {
+    if (!errorHandler.validate(validationResult, req, res)) {
         return;
     }
     User.findByEmail(req.body.email, (user, error) => {
@@ -96,7 +103,7 @@ exports.createUser = (req, res) => {
  * @returns {*}
  */
 exports.updateUser = (req, res) => {
-    if (!validateInput(req, res)) {
+    if (!errorHandler.validate(validationResult, req, res)) {
         return;
     }
     //Buscamos el usuario
@@ -143,7 +150,7 @@ exports.updateUser = (req, res) => {
  * @param res
  */
 exports.updateUserPassword = (req, res) => {
-    if (!validateInput(req, res)) {
+    if (!errorHandler.validate(validationResult, req, res)) {
         return;
     }
     User.findById(req.params.id, (user, error) => {
@@ -167,17 +174,3 @@ exports.updateUserPassword = (req, res) => {
     });
 };
 
-/**
- * Valida que los parámetros de entrada a cada petición estén sintácticamente correctos.
- * @param req
- * @param res
- * @returns {boolean}
- */
-function validateInput(req, res) {
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(HttpStatus.BAD_REQUEST).json(new ApiError("general.wrongParameters"));
-        return false;
-    }
-    return true;
-}

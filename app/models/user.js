@@ -45,20 +45,6 @@ class User {
         this.getPassword = function () {
             return _password;
         };
-
-        /*****Algunos setters*****/
-        this.setName = function(name) {
-            _name = name;
-        };
-        this.setLastName = function(lastName) {
-            _lastName = lastName;
-        };
-        this.setEmail = function(email) {
-            _email = email;
-        };
-        this.setPassword = function(password) {
-            _password = password;
-        }
     }
 
     /**
@@ -111,7 +97,7 @@ class User {
      * @param fn Callback a ejecutar una vez resuelta la búsqueda del usuario
      */
     static findById(id, fn) {
-        mLabClient.callGetFunction(id, null, function(err, resM, body) {
+        mLabClient.callGetFunction(id, null, null, function(err, resM, body) {
            console.log(body);
            if (err) {
                fn(null, new ApiError("general.internalError"));
@@ -129,7 +115,7 @@ class User {
      * @param fn Callback que resuelve el llamado a la función
      */
     static findByEmail(email, fn) {
-        mLabClient.callGetFunction('',{email: email}, function (err, resM, body) {
+        mLabClient.callGetFunction('',{email: email}, null, function (err, resM, body) {
             //El resultado debe ser único, devuelvo el primero de la lista
             if (err) {
                 fn(null, new ApiError("general.internalError"));

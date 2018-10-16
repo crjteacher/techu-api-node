@@ -24,14 +24,18 @@ class MLabClient {
      * Implementación de una llamada tipo GET
      * @param pathParam  Parámetro a nivel URL, si aplica
      * @param query Json con los parámetros de consulta
+     * @param filter Json que contiene parámetros para filtrar la consulta
      * @param fn Callback a ejecutar una vez se resuelva el llamado a Mlab
      */
-    callGetFunction(pathParam, query, fn) {
+    callGetFunction(pathParam, query, filter, fn) {
         let mlabUrl = '';
         if (!stringUtils.isBlank(pathParam)) {
             mlabUrl += pathParam;
         }
         mlabUrl += '?apiKey=' + properties.get('mlab.api.key');
+        if (filter != null) {
+            mlabUrl += '&f=' + JSON.stringify(filter);
+        }
         if (query != null) {
             mlabUrl += '&q=' + JSON.stringify(query);
         }

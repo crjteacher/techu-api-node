@@ -5,26 +5,16 @@ var express = require('express'),
 var UserController = require('../controllers/users');
 
 /**
- * Esta función es llamada antes de cada request.
+ * Listado de usuarios
  */
-router.use(function(req, res, next) {
-    // Mostramos en la consola información referente a la request
-    console.log(req.method, req.url, req.body, req.params);
-    //Seguimos a la ruta correspondiente.
-    next();
-});
-
-/**
- * Listado de usurios
- */
-router.get('', function (req, res) {
-    console.log('Entré al customers');
-});
+// router.get('', function (req, res) {
+//     console.log('Entré al customers');
+// });
 
 /**
  * Detalles de un cliente
  */
-router.get('/:id', (req, res) => UserController.getUserById(req, res));
+router.get('/:id', UserController.validate('getUserById'), (req, res) => UserController.getUserById(req, res));
 
 /**
  * Alta de un cliente
