@@ -8,15 +8,16 @@ var mLabClient = new MLabClient(properties.get('mlab.movements.collection'));
  * Modelado de cuentas
  */
 class Account {
-    constructor(id, number, clientId, type, alias) {
+    constructor(id, number, clientId, type, alias, balance) {
         let _id = id;
         let _number = number;
         let _clientId = clientId;
         let _type = type;
         let _alias = alias;
+        let _balance = balance;
 
         this.toJSON = function () {
-            return {id: _id, number: _number, clientId: _clientId, type: _type, alias: _alias};
+            return {id: _id, number: _number, clientId: _clientId, type: _type, alias: _alias, balance: _balance};
         };
 
         this.getNumber = function() {
@@ -34,6 +35,9 @@ class Account {
         this.getAlias = function() {
             return _alias;
         };
+        this.getBalance = function() {
+            return _balance;
+        }
     }
 
     /**
@@ -42,7 +46,7 @@ class Account {
      * @returns {Account}
      */
     static buildAccountFromJson(json) {
-        return new Account(json._id.$oid, json.number, json.clientId, json.type, json.alias);
+        return new Account(json._id.$oid, json.number, json.clientId, json.type, json.alias, json.balance);
     }
 
     /**
