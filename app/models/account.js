@@ -56,7 +56,7 @@ class Account {
      */
     static findByClient(clientId, fn) {
         let payload = {clientId: clientId};
-        let filter = {_id: 1, number: 1, clientId: 1, type: 1, alias: 1};
+        let filter = {_id: 1, number: 1, clientId: 1, type: 1, alias: 1, balance: 1};
         mLabClient.callGetFunction('', payload, filter, function(err, resM, body) {
             if (err) {
                 fn(null, new ApiError('general.internalError'));
