@@ -9,6 +9,8 @@ var AccountController = require('../controllers/accounts');
  */
 router.get('', AccountController.validate('getAccountsByClient'), (req, res) => AccountController.getAccountsByClient(req, res));
 
+router.get('/:accountNumber/movements', AccountController.validate('listMovements'), (req, res) => AccountController.listMovements(req, res));
+
 
 
 module.exports = router;

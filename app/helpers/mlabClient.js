@@ -12,7 +12,11 @@ class MLabClient {
      * @param collection Colección mongo objeto de la consulta.
      */
     constructor(collection) {
-        this._client = requestJson.createClient(properties.get('mlab.base.url') + collection + "/");
+        if (stringUtils.isEmpty(collection)) {
+            this._client = requestJson.createClient(properties.get('mlab.base.url') + '/');
+        } else {
+            this._client = requestJson.createClient(properties.get('mlab.base.url') + "/collections/" + collection + "/");
+        }
         this._client.headers['Content-Type'] = 'application/json';
     }
 
@@ -76,7 +80,21 @@ class MLabClient {
         mlabUrl += '?apiKey=' + properties.get('mlab.api.key');
         payload = {$set: payload}; //Para que solo se actualicen los datos pasados en el payload, sin afectar los demás
         this.client.put(mlabUrl, payload, function (err, resM, body) {
+            console.log(err);
+            console.log(resM);
             fn(err, resM, body);
+        });
+    }
+
+    /**
+     * Implementación de la ejecución de un comando mongo para queries más especializados
+     * @param payload   Payload de ejecución del comando mongo
+     * @param fn        Callback a ejecutar una vez ejecutado el comando
+     */
+    executeMongoCommand(payload, fn) {
+        let mlabUrl = 'runCommand?apiKey=' + properties.get('mlab.api.key');
+        this.client.post(mlabUrl, payload, function(err, resM, body) {
+           fn(err, resM, body);
         });
     }
 }
