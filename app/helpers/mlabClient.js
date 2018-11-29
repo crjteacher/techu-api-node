@@ -93,6 +93,8 @@ class MLabClient {
      */
     executeMongoCommand(payload, fn) {
         let mlabUrl = 'runCommand?apiKey=' + properties.get('mlab.api.key');
+        console.log(mlabUrl);
+        console.log(JSON.stringify(payload));
         this.client.post(mlabUrl, payload, function(err, resM, body) {
            fn(err, resM, body);
         });

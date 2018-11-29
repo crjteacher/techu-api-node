@@ -54,8 +54,15 @@ exports.listMovements = (req, res) => {
     if (!errorHandler.validate(validationResult, req, res)) {
         return;
     }
-    Movement.findByAccount(req.params.accountNumber, null, null, null, null, (movements, err) => {
-       res.json({});
+    Movement.findByAccount(req.params.accountNumber, '2018-10-08T00:00:00.000Z', '2018-10-24T00:00:00.000Z', 'ASC', 'RETIRO', (err, movements) => {
+        if (err) {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
+        } else if (movements) {
+            //Devolvemos la lista de cuenta asociadas al usuario
+            res.status(HttpStatus.OK).json({data: movements});
+        } else {
+            res.status(HttpStatus.NO_CONTENT).json({});
+        }
     });
 };
 
